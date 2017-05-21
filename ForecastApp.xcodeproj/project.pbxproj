@@ -123,7 +123,7 @@
 				TargetAttributes = {
 					DA7272221ECC0CFA002D9A75 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = UZD8JHA5UW;
+						DevelopmentTeam = WV7WWTD5PV;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -339,7 +339,7 @@
 			baseConfigurationReference = 58A27EA42D702F57F2B459D3 /* Pods-ForecastApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = UZD8JHA5UW;
+				DEVELOPMENT_TEAM = WV7WWTD5PV;
 				INFOPLIST_FILE = ForecastApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.leomoondev.ForecastApp;
@@ -353,7 +353,7 @@
 			baseConfigurationReference = 19BC3A04545263971C56339A /* Pods-ForecastApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = UZD8JHA5UW;
+				DEVELOPMENT_TEAM = WV7WWTD5PV;
 				INFOPLIST_FILE = ForecastApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.leomoondev.ForecastApp;
@@ -381,6 +381,7 @@
 				DA7272371ECC0CFB002D9A75 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
