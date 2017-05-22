@@ -22,7 +22,6 @@ class JSONParser {
     
     typealias JSON = [String: AnyObject]
     
-    //typealias JSONTaskCompletionHandler = (JSON?, DarkSkyError?) -> Void
     typealias JSONDictionaryCompletion = (JSON?) -> Void
 
     func jsonTask(with request: URLRequest, completionHandler completion: @escaping JSONDictionaryCompletion) -> URLSessionDataTask {

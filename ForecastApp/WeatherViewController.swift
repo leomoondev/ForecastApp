@@ -7,12 +7,11 @@
 //
 
 import UIKit
-import GoogleMaps
 import GooglePlaces
 
-class ViewController: UIViewController, CLLocationManagerDelegate, GMSAutocompleteViewControllerDelegate {
+class WeatherViewController: UIViewController, CLLocationManagerDelegate, GMSAutocompleteViewControllerDelegate {
 
-    // MARK: Outlets
+    // MARK: - Outlets
     @IBOutlet weak var cityNameLabel: UILabel!
 
     @IBOutlet weak var avgTempLabel: UILabel!
@@ -32,7 +31,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, GMSAutocomple
     @IBOutlet weak var addToFavoritesButton: UIButton!
     @IBOutlet weak var removeFromFavoritesButton: UIButton!
     
-    // MARK: Variables
+    // MARK: - Variables
     var locationManager = CLLocationManager()
     
     let networkManager = NetworkManager()
@@ -51,7 +50,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, GMSAutocomple
     }
     
 
-    // MARK: CLLocation Manager Delegate
+    // MARK: - CLLocation Manager Delegate
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Error while get location \(error)")
     }
@@ -61,7 +60,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, GMSAutocomple
         self.locationManager.stopUpdatingLocation()
     }
     
-    // MARK: GoogleAutoComplete Delegate
+    // MARK: - GoogleAutoComplete Delegate
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         cityNameLabel.text = place.name
         fetchWeather(latitue: place.coordinate.latitude, longtitude: place.coordinate.longitude)
@@ -87,7 +86,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, GMSAutocomple
         self.dismiss(animated: true, completion: nil)
     }
     
-    // MARK: Helper Method
+    // MARK: - Helper Method
     func displayWeather(using viewModel: WeatherViewModel) {
         avgTempLabel.text = viewModel.temperature
         summaryLabel.text = viewModel.summary
@@ -106,7 +105,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, GMSAutocomple
         }
     }
     
-    // MARK: IBAction
+    // MARK: - IBAction
     @IBAction func searchButtonTapped(_ sender: Any) {
         let autoCompleteController = GMSAutocompleteViewController()
         autoCompleteController.delegate = self
