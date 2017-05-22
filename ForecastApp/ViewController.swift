@@ -10,45 +10,28 @@ import UIKit
 import GoogleMaps
 import GooglePlaces
 
-class ViewController: UIViewController, CLLocationManagerDelegate, GMSMapViewDelegate, GMSAutocompleteViewControllerDelegate {
+class ViewController: UIViewController, CLLocationManagerDelegate, GMSAutocompleteViewControllerDelegate {
 
     // MARK : Outlets
-    //@IBOutlet weak var googleMapView: GMSMapView!
+    @IBOutlet weak var currentWeatherLabel: UILabel!
     
+    @IBOutlet weak var humidityLabel: UILabel!
+    
+    @IBOutlet weak var precipationLabel: UILabel!
+    
+    @IBOutlet weak var summaryLabel: UILabel!
+    
+    @IBOutlet weak var weatherImageIcon: UIImageView!
     // MARK : Variables
     var locationManager = CLLocationManager()
+    
+    let networkManager = NetworkManager()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
-        locationManager.startMonitoringSignificantLocationChanges()
-        
-        initGoogleMaps()
-    }
 
-    func initGoogleMaps() {
-        // Create a GMSCameraPosition that tells the map to display the
-        // coordinate -33.86,151.20 at zoom level 6.
-        let camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 6.0)
-        let mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
-        mapView.isMyLocationEnabled = true
-        //self.googleMapView.camera = camera
-        //googleMapView = mapView
-        
-        //self.googleMapView.delegate = self
-//        self.googleMapView.isMyLocationEnabled = true
-//        self.googleMapView.settings.myLocationButton = true
-//        
-        // Creates a marker in the center of the map.
-        let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: -33.86, longitude: 151.20)
-        marker.title = "Sydney"
-        marker.snippet = "Australia"
-        marker.map = mapView
     }
     
     func locateWithLongtitude(lon: Double, andLatitude lat: Double, andTitle title: String) {
@@ -79,24 +62,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, GMSMapViewDel
        // self.googleMapView.animate(to: camera)
         self.locationManager.stopUpdatingLocation()
     }
-
-//    // MARK : GMSMapView Delegate
-//    func mapView(_ mapView: GMSMapView, idleAt position: GMSCameraPosition) {
-//        //self.googleMapView.isMyLocationEnabled = true
-//    }
-//    
-//    func mapView(_ mapView: GMSMapView, willMove gesture: Bool) {
-//        //self.googleMapView.isMyLocationEnabled = true
-//        if(gesture) {
-//            mapView.selectedMarker = nil
-//        }
-//    }
     
     // MARK : GoogleAutoComplete Delegate
     
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         let camera = GMSCameraPosition.camera(withLatitude: place.coordinate.latitude, longitude: place.coordinate.longitude, zoom: 15.0)
         ///self.googleMapView.camera = camera
+        fetchWeather(latitue: place.coordinate.latitude, longtitude: place.coordinate.longitude)
         locateWithLongtitude(lon: place.coordinate.longitude, andLatitude: place.coordinate.latitude, andTitle: "HELLO")
         self.dismiss(animated: true, completion: nil)
     }
@@ -117,6 +89,27 @@ class ViewController: UIViewController, CLLocationManagerDelegate, GMSMapViewDel
         
         self.locationManager.startUpdatingLocation()
         self.present(autoCompleteController, animated: true, completion: nil)
+    }
+    
+    func displayWeather(using viewModel: WeatherViewModel) {
+        currentWeatherLabel.text = viewModel.temperature
+        humidityLabel.text = viewModel.humidity
+        precipationLabel.text = viewModel.precipitationProbability
+        summaryLabel.text = viewModel.summary
+        weatherImageIcon.image = viewModel.icon
+    }
+    
+    func fetchWeather(latitue: Double, longtitude: Double ) {
+        
+        
+        //let coordinate = Coordinate(latitude: 37.8267, longitude: -122.4233)
+        
+        networkManager.getCurrentWeather(at: Coordinate(latitude: latitue, longitude: longtitude)) { [unowned self] currentWeather in
+            if let currentWeather = currentWeather {
+                let viewModel = WeatherViewModel(model: currentWeather)
+                self.displayWeather(using: viewModel)
+            }
+        }
     }
     
 }
