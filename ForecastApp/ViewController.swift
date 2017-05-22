@@ -12,17 +12,27 @@ import GooglePlaces
 
 class ViewController: UIViewController, CLLocationManagerDelegate, GMSAutocompleteViewControllerDelegate {
 
-    // MARK : Outlets
-    @IBOutlet weak var currentWeatherLabel: UILabel!
-    
-    @IBOutlet weak var humidityLabel: UILabel!
-    
+    // MARK: Outlets
+    @IBOutlet weak var cityNameLabel: UILabel!
+
+    @IBOutlet weak var avgTempLabel: UILabel!
     @IBOutlet weak var precipationLabel: UILabel!
-    
     @IBOutlet weak var summaryLabel: UILabel!
-    
+    @IBOutlet weak var windSpeedLabel: UILabel!
     @IBOutlet weak var weatherImageIcon: UIImageView!
-    // MARK : Variables
+    
+    @IBOutlet weak var tempTitleLabel: UILabel!
+    @IBOutlet weak var summaryTitleLabel: UILabel!
+    @IBOutlet weak var windTitleLabel: UILabel!
+    @IBOutlet weak var precipitationTitleLabel: UILabel!
+    
+    @IBOutlet weak var appTitleLabel: UILabel!
+    @IBOutlet weak var informationLabel: UILabel!
+    
+    @IBOutlet weak var addToFavoritesButton: UIButton!
+    @IBOutlet weak var removeFromFavoritesButton: UIButton!
+    
+    // MARK: Variables
     var locationManager = CLLocationManager()
     
     let networkManager = NetworkManager()
@@ -31,45 +41,41 @@ class ViewController: UIViewController, CLLocationManagerDelegate, GMSAutocomple
     override func viewDidLoad() {
         super.viewDidLoad()
 
-
-    }
-    
-    func locateWithLongtitude(lon: Double, andLatitude lat: Double, andTitle title: String) {
+        tempTitleLabel.isHidden = true
+        summaryTitleLabel.isHidden = true
+        windTitleLabel.isHidden = true
+        precipitationTitleLabel.isHidden = true
         
-        DispatchQueue.main.async() { () -> Void in
-            
-            let position = CLLocationCoordinate2DMake(lat, lon)
-            let marker = GMSMarker(position: position)
-            
-            let camera = GMSCameraPosition.camera(withLatitude: lat, longitude: lon, zoom: 10)
-            //self.googleMapView.camera = camera
-            
-            marker.title = "Address : \(title)"
-            //marker.map = self.googleMapView
-        }
+        addToFavoritesButton.isHidden = true
+        removeFromFavoritesButton.isHidden = true
     }
     
-    // MARK : CLLocation Manager Delegate
+
+    // MARK: CLLocation Manager Delegate
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Error while get location \(error)")
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location = locations.last
         
-        let camera = GMSCameraPosition.camera(withLatitude: (location?.coordinate.latitude)!, longitude: (location?.coordinate.longitude)!, zoom: 17.0)
-        
-       // self.googleMapView.animate(to: camera)
         self.locationManager.stopUpdatingLocation()
     }
     
-    // MARK : GoogleAutoComplete Delegate
-    
+    // MARK: GoogleAutoComplete Delegate
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
-        let camera = GMSCameraPosition.camera(withLatitude: place.coordinate.latitude, longitude: place.coordinate.longitude, zoom: 15.0)
-        ///self.googleMapView.camera = camera
+        cityNameLabel.text = place.name
         fetchWeather(latitue: place.coordinate.latitude, longtitude: place.coordinate.longitude)
-        locateWithLongtitude(lon: place.coordinate.longitude, andLatitude: place.coordinate.latitude, andTitle: "HELLO")
+        
+        appTitleLabel.isHidden = true
+        informationLabel.isHidden = true
+        
+        tempTitleLabel.isHidden = false
+        summaryTitleLabel.isHidden = false
+        windTitleLabel.isHidden = false
+        precipitationTitleLabel.isHidden = false
+        
+        addToFavoritesButton.isHidden = false
+        removeFromFavoritesButton.isHidden = false
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -81,8 +87,26 @@ class ViewController: UIViewController, CLLocationManagerDelegate, GMSAutocomple
         self.dismiss(animated: true, completion: nil)
     }
     
+    // MARK: Helper Method
+    func displayWeather(using viewModel: WeatherViewModel) {
+        avgTempLabel.text = viewModel.temperature
+        summaryLabel.text = viewModel.summary
+        precipationLabel.text = viewModel.precipitationProbability
+        windSpeedLabel.text = viewModel.windSpeed
+        weatherImageIcon.image = viewModel.icon
+    }
     
-    // MARK : IBAction
+    func fetchWeather(latitue: Double, longtitude: Double ) {
+        
+        networkManager.getCurrentWeather(at: Coordinate(latitude: latitue, longitude: longtitude)) { [unowned self] currentWeather in
+            if let currentWeather = currentWeather {
+                let viewModel = WeatherViewModel(model: currentWeather)
+                self.displayWeather(using: viewModel)
+            }
+        }
+    }
+    
+    // MARK: IBAction
     @IBAction func searchButtonTapped(_ sender: Any) {
         let autoCompleteController = GMSAutocompleteViewController()
         autoCompleteController.delegate = self
@@ -91,25 +115,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, GMSAutocomple
         self.present(autoCompleteController, animated: true, completion: nil)
     }
     
-    func displayWeather(using viewModel: WeatherViewModel) {
-        currentWeatherLabel.text = viewModel.temperature
-        humidityLabel.text = viewModel.humidity
-        precipationLabel.text = viewModel.precipitationProbability
-        summaryLabel.text = viewModel.summary
-        weatherImageIcon.image = viewModel.icon
+    @IBAction func addToFavoritesButtonTapped(_ sender: Any) {
+        
     }
     
-    func fetchWeather(latitue: Double, longtitude: Double ) {
+    @IBAction func removeFromFavoritesButtonTapped(_ sender: Any) {
         
-        
-        //let coordinate = Coordinate(latitude: 37.8267, longitude: -122.4233)
-        
-        networkManager.getCurrentWeather(at: Coordinate(latitude: latitue, longitude: longtitude)) { [unowned self] currentWeather in
-            if let currentWeather = currentWeather {
-                let viewModel = WeatherViewModel(model: currentWeather)
-                self.displayWeather(using: viewModel)
-            }
-        }
     }
     
 }

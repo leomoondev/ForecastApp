@@ -9,6 +9,7 @@
 import Foundation
 
 class NetworkManager {
+    
     fileprivate let apiKey = "5079a2674db9b6ef9345eb089da4cbbd"
     
     lazy var baseUrl: URL = {
@@ -17,13 +18,8 @@ class NetworkManager {
     
     let downloader = JSONParser()
     
-    //typealias CurrentWeatherCompletionHandler = (CurrentWeather?, DarkSkyError?) -> Void
     typealias WeatherCompletionHandler = (Weather?) -> Void
-    //typealias JSON = [String: AnyObject]
-    
-    //typealias JSONTaskCompletionHandler = (JSON?, DarkSkyError?) -> Void
-    //typealias JSONDictionaryCompletion = (JSON?) -> Void
-    
+
     func getCurrentWeather(at coordinate: Coordinate, completionHandler completion: @escaping WeatherCompletionHandler) {
         
         guard let url = URL(string: coordinate.description, relativeTo: baseUrl) else {
@@ -45,13 +41,10 @@ class NetworkManager {
                     completion(nil)
                     return
                 }
-                
                 completion(currentWeather)
             }
         }
-        
         task.resume()
-        
     }
 }
 

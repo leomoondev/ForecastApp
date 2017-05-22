@@ -11,17 +11,18 @@ import UIKit
 
 struct WeatherViewModel {
     let temperature: String
-    let humidity: String
     let precipitationProbability: String
     let summary: String
     let icon: UIImage
+    let windSpeed: String
+
     
     init(model: Weather) {
         let roundedTemperature = Int(model.temperature)
         self.temperature = "\(roundedTemperature)º"
         
-        let humidityPercentValue = Int(model.humidity * 100)
-        self.humidity = "\(humidityPercentValue)%"
+        let windSpeedValue = Int(model.windSpeed * 100)
+        self.windSpeed = "\(windSpeedValue)mph"
         
         let precipPercentValue = Int(model.precipitationProbability * 100)
         self.precipitationProbability = "\(precipPercentValue)%"
