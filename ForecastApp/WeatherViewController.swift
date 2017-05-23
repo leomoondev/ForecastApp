@@ -109,7 +109,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, GMSAut
 //            }
 //        }
         
-        let networkManager = NetworkManager(apiKey: apiKey)
+        let networkManager = NetworkManager()
         networkManager.getCurrentWeather(at: Coordinate(latitude: latitue, longitude: longtitude)) {
             (currentWeather) in
             if let currentWeather = currentWeather {

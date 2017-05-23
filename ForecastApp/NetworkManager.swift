@@ -9,48 +9,18 @@
 import Foundation
 
 class NetworkManager {
-    let darkSkyAPIKey: String
     let baseUrl: URL?
-    //fileprivate let apiKey = "5079a2674db9b6ef9345eb089da4cbbd"
+    fileprivate let apiKey = "5079a2674db9b6ef9345eb089da4cbbd"
     
-//    lazy var baseUrl: URL = {
-//        return URL(string: "https://api.darksky.net/forecast/\(self.apiKey)/")!
-//    }()
-//
-    
-    init(apiKey: String) {
-        darkSkyAPIKey = apiKey
-        baseUrl = URL(string: "https://api.darksky.net/forecast/\(darkSkyAPIKey)/")
+    init() {
+        
+        baseUrl = URL(string: "https://api.darksky.net/forecast/\(apiKey)/")
     }
-    //let downloader = JSONParser()
 
     typealias WeatherCompletionHandler = (Weather?) -> Void
 
     func getCurrentWeather(at coordinate: Coordinate, completionHandler completion: @escaping WeatherCompletionHandler) {
         
-//        guard let url = URL(string: coordinate.description, relativeTo: baseUrl) else {
-//            completion(nil)
-//            return
-//        }
-//        
-//        let request = URLRequest(url: url)
-//        
-//        let task = downloader.jsonTask(with: request) { json in
-//            
-//            DispatchQueue.main.async {
-//                guard let json = json else {
-//                    completion(nil)
-//                    return
-//                }
-//                
-//                guard let currentWeatherJson = json["currently"] as? [String: AnyObject], let currentWeather = Weather(json: currentWeatherJson) else {
-//                    completion(nil)
-//                    return
-//                }
-//                completion(currentWeather)
-//            }
-//        }
-//        task.resume()
         
         if let url = URL(string: coordinate.description, relativeTo: baseUrl) {
             let jsonParser = JSONParser(url: url as NSURL)

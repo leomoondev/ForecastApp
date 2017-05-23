@@ -6,82 +6,46 @@
 //  Copyright © 2017 leomoon. All rights reserved.
 //
 
-//import Foundation
-//
-//struct Weather {
-//    let temperature: Double
-//    let precipitationProbability: Double
-//    let summary: String
-//    let icon: String
-//    let windSpeed: Double
-//}
-//
-//extension Weather {
-//    
-//    struct Key {
-//        static let temperature = "temperature"
-//        static let precipitationProbability = "precipProbability"
-//        static let summary = "summary"
-//        static let icon = "icon"
-//        static let windSpeed = "windSpeed"
-//    }
-//    
-//    init?(json: [String: AnyObject]) {
-//        guard let tempValue = json[Key.temperature] as? Double,
-//            let windSpeedValue = json[Key.windSpeed] as? Double,
-//            let precipitationProbabilityValue = json[Key.precipitationProbability] as? Double,
-//            let summaryString = json[Key.summary] as? String,
-//            let iconString = json[Key.icon] as? String else { return nil }
-//        
-//        self.temperature = tempValue
-//        self.windSpeed = windSpeedValue
-//        self.precipitationProbability = precipitationProbabilityValue
-//        self.summary = summaryString
-//        self.icon = iconString
-//    }
-//}
-
 import Foundation
 import UIKit
 
-enum Icon: String {
-    case ClearDay = "clear-day"
-    case ClearNight = "clear-night"
-    case Rain = "rain"
-    case Snow = "snow"
-    case Sleet = "sleet"
-    case Wind = "wind"
-    case Fog = "fog"
-    case Cloudy = "cloudy"
-    case PartlyCloudyDay = "partly-cloudy-day"
-    case PartlyCloudyNight = "partly-cloudy-night"
+enum WeatherIcon: String {
+    case clearDay = "clear-day"
+    case clearNight = "clear-night"
+    case rain = "rain"
+    case snow = "snow"
+    case sleet = "sleet"
+    case wind = "wind"
+    case fog = "fog"
+    case cloudy = "cloudy"
+    case partlyCloudyDay = "partly-cloudy-day"
+    case partlyCloudyNight = "partly-cloudy-night"
     
     func toImage() -> UIImage? {
         var imageName: String
         
         switch self {
-        case .ClearDay:
+        case .clearDay:
             imageName = "clear-day.png"
-        case .ClearNight:
+        case .clearNight:
             imageName = "clear-night.png"
-        case .Rain:
+        case .rain:
             imageName = "rain.png"
-        case .Snow:
+        case .snow:
             imageName = "snow.png"
-        case .Sleet:
+        case .sleet:
             imageName = "sleet.png"
-        case .Wind:
+        case .wind:
             imageName = "wind.png"
-        case .Fog:
+        case .fog:
             imageName = "fog.png"
-        case .Cloudy:
+        case .cloudy:
             imageName = "cloudy.png"
-        case .PartlyCloudyDay:
+        case .partlyCloudyDay:
             imageName = "cloudy-day.png"
-        case .PartlyCloudyNight:
-            imageName = "cloudy-night.png"
+        case .partlyCloudyNight:
+            imageName = "cloudyå-night.png"
         }
-        
         
         return UIImage(named: imageName)
     }
@@ -109,8 +73,8 @@ struct Weather {
         summary = weatherDictionary["summary"] as? String
         
         if let iconString = weatherDictionary["icon"] as? String,
-            let weatherIcon: Icon = Icon(rawValue: iconString){
-            icon = weatherIcon.toImage()
+            let weatherImage: WeatherIcon = WeatherIcon(rawValue: iconString){
+            icon = weatherImage.toImage()
         }
     }
 }
