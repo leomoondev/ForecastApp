@@ -28,17 +28,13 @@ class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITab
         
         super.viewDidLoad()
         print(numberOfPlacesArray)
-       // numberOfPlacesArray = UserDefaults.standard.array(forKey: "numberOfPlacesArray") as! [String]
         let userDefaults = UserDefaults.standard
-        guard let data = userDefaults.object(forKey: "numberOfPlacesArray") as? [String] else {
+        guard let userDefaultsDataArray = userDefaults.object(forKey: "numberOfPlacesArray") as? [String] else {
             
             return
         }
-        
-        numberOfPlacesArray = data
+        numberOfPlacesArray = userDefaultsDataArray
         favoritesTableView.reloadData()
-        
-
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -94,11 +90,7 @@ class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITab
     {
         tableView.deselectRow(at: indexPath, animated: true)
         self.performSegue(withIdentifier: "goToWeatherVC", sender: self);
-//
-//        let newValue = numberOfCityObject
-//        // Create a new variable to store the instance of PlayerTableViewController
-//        let destinationVC = WeatherDetailViewController()
-//        //destinationVC.receivedValue = newValue
+
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -110,7 +102,6 @@ class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITab
         if (editingStyle == UITableViewCellEditingStyle.delete) {
             
             if numberOfPlacesArray.count > 0 {
-                
                 
                 numberOfPlacesArray.remove(at: indexPath.row)
                 let userDefaults = UserDefaults.standard
@@ -130,7 +121,6 @@ class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITab
         
         let defaults = UserDefaults.standard
         defaults.set(numberOfPlacesArray, forKey: "numberOfPlacesArray")
-        
         defaults.synchronize()
         
         self.noItemsInArray = false
@@ -158,13 +148,18 @@ class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITab
 
     // MARK: - Helper Method
     func fetchWeather(latitue: Double, longtitude: Double ) {
-        
-        NetworkManager.getWeatherInformation(withLocation: "\(latitue),\(longtitude)") { (results:[Weather]) in
-            for result in results {
-                    numberOfCityObject.append(result)
+        numberOfCityObject.removeAll()
 
-                
+        NetworkManager.getWeatherInformation(withLocation: "\(latitue),\(longtitude)") { (results:[Weather]) in
+            
+            for result in results {
+                numberOfCityObject.append(result)
             }
+            numberOfCityObject.remove(at: 7)
+            numberOfCityObject.remove(at: 6)
+            numberOfCityObject.remove(at: 5)
+            numberOfCityObject.remove(at: 4)
+            numberOfCityObject.remove(at: 0)
         }
     }
 }
