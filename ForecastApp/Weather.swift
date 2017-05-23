@@ -83,9 +83,12 @@ enum WeatherIcon: String {
 
 
 struct Weather {
-    let summary:String
+    let time:Double
     let icon:String
-    let temperature:Double
+    let temperatureMax:Double
+    let temperatureMin:Double
+    let windSpeed:Double
+    let precipitationProb:Double
     
     enum SerializationError:Error {
         case missing(String)
@@ -94,15 +97,23 @@ struct Weather {
     
     
     init(json:[String:Any]) throws {
-        guard let summary = json["summary"] as? String else {throw SerializationError.missing("summary is missing")}
+       // guard let summary = json["summary"] as? String else {throw SerializationError.missing("summary is missing")}
+        guard let time = json["time"] as? Double else {throw SerializationError.missing("time is missing")}
         
+
         guard let icon = json["icon"] as? String else {throw SerializationError.missing("icon is missing")}
         
-        guard let temperature = json["temperatureMax"] as? Double else {throw SerializationError.missing("temp is missing")}
-        
-        self.summary = summary
+        guard let temperatureMax = json["temperatureMax"] as? Double else {throw SerializationError.missing("tempMax is missing")}
+        guard let temperatureMin = json["temperatureMin"] as? Double else {throw SerializationError.missing("tempMin is missing")}
+        guard let windSpeed = json["windSpeed"] as? Double else {throw SerializationError.missing("windSpeed is missing")}
+        guard let precipitationProb = json["precipProbability"] as? Double else {throw SerializationError.missing("precipProb is missing")}
+
+        self.time = time
         self.icon = icon
-        self.temperature = temperature
+        self.temperatureMax = temperatureMax
+        self.temperatureMin = temperatureMin
+        self.windSpeed = windSpeed
+        self.precipitationProb = precipitationProb
         
     }
     

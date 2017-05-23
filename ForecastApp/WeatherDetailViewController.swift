@@ -130,44 +130,62 @@ class WeatherDetailViewController: UIViewController, UITableViewDelegate, UITabl
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        if (self.noItems == true) {
-            return 1
-        } else {
+
             
-            return self.numberOfPlacesArray.count
-        }
+            return favoritesCityObject.count
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         
+       // let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherDetailCell", for: indexPath) as! WeatherDetailTableViewCell
+        
+//        cell.weatherIconImageView.image = favoritesCityObject[indexPath.row].icon
+//        for i in 0...favoritesCityObject.count-1{
+//            
+//            cell.temperatureMaxLabel.text = "\(favoritesCityObject[i].temperature)º"
+//            
+//        }
+
+        ///cell.temperatureMaxLabel.text = "\(favoritesCityObject[indexPath.row].temperature)º"
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherDetailCell", for: indexPath) as! WeatherDetailTableViewCell
-        if (self.noItems == true) {
-            
-            //            let noPartyItems = PartyItem.init(name: "No Party Items", goal: 0, image: #imageLiteral(resourceName: "sadClown"), itemEventID: "hostingEvent", amountFunded: 0)
-            //            cell.configureCellWithSadClown(partyItem: noPartyItems)
-            return cell
-            
-        } else {
-            
+
+        
             //            cell.configureCellWithPartyItem(partyItem: self.numberOfPartyItemsArray[indexPath.row])
-            return cell
-        }
+
+        let composition = favoritesCityObject[indexPath.row]
+
+        let dummyString = "\(NSDate(timeIntervalSince1970: composition.time))"
+
+        //cell.dayTimeLabel.text = "\(NSDate(timeIntervalSince1970: composition.time))"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE"
+        
+        cell.dayTimeLabel.text = dateFormatter.string(from: (NSDate(timeIntervalSince1970: composition.time)) as Date)
+        
+       // cell.dayTimeLabel.text = Date().dayOfWeek(today: dummyString)!
+        cell.temperatureMaxLabel.text = "\(composition.temperatureMax)º"
+        cell.temperatureMinLabel.text = "\(composition.temperatureMin)º"
+        cell.windSpeedLabel.text = "\(composition.windSpeed)mph"
+        cell.precipitationLabel.text = "\(composition.precipitationProb)%"
+
+        //cell.photoImageView.image = composition.photo.image
+        //cell.authorLabel.text = composition.quote.author
+        //cell.quoteLabel.text = composition.quote.quote
+        
+        
+        return cell
         
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
-    {
-        tableView.deselectRow(at: indexPath, animated: true)
-        self.performSegue(withIdentifier: "goToWeatherVC", sender: indexPath);
-        
-    }
+
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
-    
+
+
 }
-
-
 

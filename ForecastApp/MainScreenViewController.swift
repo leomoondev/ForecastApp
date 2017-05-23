@@ -144,17 +144,11 @@ class MainScreenViewController: UIViewController, UITableViewDelegate, UITableVi
     {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "PlacesCell", for: indexPath) as! MainScreenTableViewCell
-        if (self.noItems == true) {
-            
-//            let noPartyItems = PartyItem.init(name: "No Party Items", goal: 0, image: #imageLiteral(resourceName: "sadClown"), itemEventID: "hostingEvent", amountFunded: 0)
-//            cell.configureCellWithSadClown(partyItem: noPartyItems)
-            return cell
-            
-        } else {
-            
+
+
 //            cell.configureCellWithPartyItem(partyItem: self.numberOfPartyItemsArray[indexPath.row])
             return cell
-        }
+        
         
     }
     
