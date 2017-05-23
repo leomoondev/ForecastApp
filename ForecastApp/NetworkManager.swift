@@ -9,62 +9,45 @@
 import Foundation
 
 class NetworkManager {
-    let baseUrl: URL?
-    fileprivate let apiKey = "5079a2674db9b6ef9345eb089da4cbbd"
-    
-    init() {
-        
-        baseUrl = URL(string: "https://api.darksky.net/forecast/\(apiKey)/")
-    }
 
     typealias WeatherCompletionHandler = (Weather?) -> Void
 
-//    func getCurrentWeather(at coordinate: Coordinate, completionHandler completion: @escaping WeatherCompletionHandler) {
-//        
-//        
-//        if let url = URL(string: coordinate.description, relativeTo: baseUrl) {
-//            let jsonParser = JSONParser(url: url as NSURL)
-//            
-//            jsonParser.jsonTask {
-//                (JSONDictionary) in
-//                let currentWeather = self.currentWeatherFromJSON(JSONDictionary)
-//                completion(currentWeather)
-//            }
-//        } else {
-//            print("Could not construct a valid URL")
-//        }
-//    }
+    static let basePath = "https://api.darksky.net/forecast/5079a2674db9b6ef9345eb089da4cbbd/"
     
-//    func currentWeatherFromJSON(_ jsonDictionary: [String: AnyObject]?) -> Weather? {
-//        var forecastArray:[Weather] = []
-//        
-//        
-//        if let currentWeatherDictionary = jsonDictionary?["daily"] as? [String: AnyObject] {
-//            
-//            if let dailyWeather = currentWeatherDictionary["data"] as? [[String:Any]] {
-//                for dataPoint in dailyWeather {
-//                    
-////                    if let weatherObject = try? Weather(weatherDictionary: dataPoint as [String : AnyObject]) {
-////                        //forecastArray.append(weatherObject)
-////                        //print(forecastArray)
-////                    }
-//                }
-//            }
-//            return Weather(weatherDictionary: currentWeatherDictionary)
-//            
-//        }
-//        else {
-//            print("JSON dictionary returned nil for 'currently' key")
-//            return nil
-//        }
-//    }
-//    
+    static func getWeatherInformation(withLocation location:String, completion: @escaping ([Weather]) -> ()) {
+        
+        let url = basePath + location
+        
+        let request = URLRequest(url: URL(string: url)!)
+        
+        let task = URLSession.shared.dataTask(with: request) { (data:Data?, response:URLResponse?, error:Error?) in
+            
+            var forecastArray:[Weather] = []
+            
+            if let data = data {
+                
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String:Any] {
+                        if let dailyForecasts = json["daily"] as? [String:Any] {
+                            if let dailyData = dailyForecasts["data"] as? [[String:Any]] {
+                                for dataPoint in dailyData {
+                                    if let weatherObject = try? Weather(json: dataPoint) {
+                                        forecastArray.append(weatherObject)
+                                    }
+                                }
+                            }
+                        }
+                        
+                    }
+                }catch {
+                    print(error.localizedDescription)
+                }
+                
+                completion(forecastArray)
+            }
+        }
+        task.resume()
+    }
 }
 
-//struct Coordinate {
-//    let latitude: Double
-//    let longitude: Double
-//    var description: String {
-//        return "\(latitude),\(longitude)"
-//    }
-//}
+

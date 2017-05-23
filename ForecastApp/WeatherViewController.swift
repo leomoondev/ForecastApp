@@ -11,7 +11,6 @@ import UIKit
 import GooglePlaces
 
 var favoritesCityArray = [String]()
-//var favoritesCityObjectArray = [WeatherViewModel]()
 
 class WeatherViewController: UIViewController, CLLocationManagerDelegate, GMSAutocompleteViewControllerDelegate {
 
@@ -38,7 +37,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, GMSAut
     // MARK: - Variables
     var locationManager = CLLocationManager()
     
-    fileprivate let apiKey = "5079a2674db9b6ef9345eb089da4cbbd"
+    //fileprivate let apiKey = "5079a2674db9b6ef9345eb089da4cbbd"
     //let networkManager = NetworkManager()
 
     
@@ -135,7 +134,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, GMSAut
 //            }
 //        }
         
-        Weather.forecast(withLocation: "\(latitude),\(longtitude)") { (results:[Weather]) in
+        NetworkManager.getWeatherInformation(withLocation: "\(latitude),\(longtitude)") { (results:[Weather]) in
             for result in results {
                 
                 print("\(result)\n\n")
@@ -167,10 +166,6 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, GMSAut
         }
 
 
-    }
-    
-    @IBAction func removeFromFavoritesButtonTapped(_ sender: Any) {
-        
     }
     
 }

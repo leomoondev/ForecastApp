@@ -14,13 +14,6 @@ class JSONParser {
     lazy var session: URLSession = URLSession(configuration: self.config)
     let queryURL: NSURL
 
-//    init(configuration: URLSessionConfiguration) {
-//        self.session = URLSession(configuration: configuration)
-//    }
-//    
-//    convenience init() {
-//        self.init(configuration: .default)
-//    }
     init(url: NSURL) {
         self.queryURL = url
     }
@@ -29,33 +22,6 @@ class JSONParser {
     
     typealias JSONDictionaryCompletion = (JSON?) -> Void
 
-//    func jsonTask(with request: URLRequest, completionHandler completion: @escaping JSONDictionaryCompletion) -> URLSessionDataTask {
-//        let task = session.dataTask(with: request) { data, response, error in
-//            
-//            // Convert to HTTP Response
-//            guard let httpResponse = response as? HTTPURLResponse else {
-//                completion(nil)
-//                return
-//            }
-//            
-//            if httpResponse.statusCode == 200 {
-//                if let data = data {
-//                    do {
-//                        let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyObject]
-//                        completion(json)
-//                    } catch {
-//                        completion(nil)
-//                    }
-//                } else {
-//                    completion(nil)
-//                }
-//            } else {
-//                completion(nil)
-//            }
-//        }
-//        
-//        return task
-//    }
     func jsonTask(completion: @escaping JSONDictionaryCompletion) {
         
         let request: NSURLRequest = NSURLRequest(url: queryURL as URL)
