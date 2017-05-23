@@ -65,7 +65,6 @@ struct Weather {
         case invalid(String, Any)
     }
     
-    
     init(json:[String:Any]) throws {
         
         guard let time = json["time"] as? Double else {throw SerializationError.missing("time is missing")}

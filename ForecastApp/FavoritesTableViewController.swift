@@ -15,15 +15,29 @@ var numberOfCityObject = [Weather]()
 class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GMSAutocompleteViewControllerDelegate {
     
     //MARK: - Variables
-    var noItems:Bool?
+    var noItemsInArray:Bool?
     var favoritesStoreObject = [Weather]()
     var favoritesCityNameArray = [String]()
+    
+    var textArray:[String] = [String]()
     
     //MARK: - IBOutlet
     @IBOutlet weak var favoritesTableView: UITableView!
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        print(numberOfPlacesArray)
+       // numberOfPlacesArray = UserDefaults.standard.array(forKey: "numberOfPlacesArray") as! [String]
+        let userDefaults = UserDefaults.standard
+        guard let data = userDefaults.object(forKey: "numberOfPlacesArray") as? [String] else {
+            
+            return
+        }
+        
+        numberOfPlacesArray = data
+        favoritesTableView.reloadData()
+        
 
     }
 
@@ -33,10 +47,10 @@ class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITab
         
         if numberOfPlacesArray.count == 0 {
             
-            self.noItems = true
+            self.noItemsInArray = true
             self.favoritesTableView.reloadData()
         }
-        
+
     }
 
     //MARK: - UITableView Delegate & Data Source
@@ -46,7 +60,8 @@ class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITab
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if (self.noItems == true) {
+        if (self.noItemsInArray == true) {
+            
             return 1
         }
         else {
@@ -58,13 +73,13 @@ class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITab
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "FavoritesCell", for: indexPath) as! FavoritesTableViewCell
-        if (self.noItems == true) {
+        if (numberOfPlacesArray.count == 0) {
 
             return cell
             
         }
         else {
-            
+
             cell.cityNameTextLabel.text = numberOfPlacesArray[indexPath.row]
             return cell
         }
@@ -98,6 +113,8 @@ class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITab
                 
                 
                 numberOfPlacesArray.remove(at: indexPath.row)
+                let userDefaults = UserDefaults.standard
+                userDefaults.set(numberOfPlacesArray, forKey: "numberOfPlacesArray")
                 favoritesTableView.reloadData()
                 
             } else {
@@ -110,7 +127,13 @@ class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITab
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         
         numberOfPlacesArray.append(place.name)
-        self.noItems = false
+        
+        let defaults = UserDefaults.standard
+        defaults.set(numberOfPlacesArray, forKey: "numberOfPlacesArray")
+        
+        defaults.synchronize()
+        
+        self.noItemsInArray = false
         favoritesTableView.reloadData()
         fetchWeather(latitue: place.coordinate.latitude, longtitude: place.coordinate.longitude)
         self.dismiss(animated: true, completion: nil)
@@ -130,7 +153,6 @@ class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITab
         let autoCompleteController = GMSAutocompleteViewController()
         autoCompleteController.delegate = self
         
-        //self.locationManager.startUpdatingLocation()
         self.present(autoCompleteController, animated: true, completion: nil)
     }
 
@@ -139,7 +161,8 @@ class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITab
         
         NetworkManager.getWeatherInformation(withLocation: "\(latitue),\(longtitude)") { (results:[Weather]) in
             for result in results {
-                numberOfCityObject.append(result)
+                    numberOfCityObject.append(result)
+
                 
             }
         }
