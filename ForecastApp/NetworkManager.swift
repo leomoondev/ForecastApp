@@ -19,37 +19,52 @@ class NetworkManager {
 
     typealias WeatherCompletionHandler = (Weather?) -> Void
 
-    func getCurrentWeather(at coordinate: Coordinate, completionHandler completion: @escaping WeatherCompletionHandler) {
-        
-        
-        if let url = URL(string: coordinate.description, relativeTo: baseUrl) {
-            let jsonParser = JSONParser(url: url as NSURL)
-            
-            jsonParser.jsonTask {
-                (JSONDictionary) in
-                let currentWeather = self.currentWeatherFromJSON(JSONDictionary)
-                completion(currentWeather)
-            }
-        } else {
-            print("Could not construct a valid URL")
-        }
-    }
+//    func getCurrentWeather(at coordinate: Coordinate, completionHandler completion: @escaping WeatherCompletionHandler) {
+//        
+//        
+//        if let url = URL(string: coordinate.description, relativeTo: baseUrl) {
+//            let jsonParser = JSONParser(url: url as NSURL)
+//            
+//            jsonParser.jsonTask {
+//                (JSONDictionary) in
+//                let currentWeather = self.currentWeatherFromJSON(JSONDictionary)
+//                completion(currentWeather)
+//            }
+//        } else {
+//            print("Could not construct a valid URL")
+//        }
+//    }
     
-    func currentWeatherFromJSON(_ jsonDictionary: [String: AnyObject]?) -> Weather? {
-        if let currentWeatherDictionary = jsonDictionary?["currently"] as? [String: AnyObject] {
-            return Weather(weatherDictionary: currentWeatherDictionary)
-        } else {
-            print("JSON dictionary returned nil for 'currently' key")
-            return nil
-        }
-    }
-    
+//    func currentWeatherFromJSON(_ jsonDictionary: [String: AnyObject]?) -> Weather? {
+//        var forecastArray:[Weather] = []
+//        
+//        
+//        if let currentWeatherDictionary = jsonDictionary?["daily"] as? [String: AnyObject] {
+//            
+//            if let dailyWeather = currentWeatherDictionary["data"] as? [[String:Any]] {
+//                for dataPoint in dailyWeather {
+//                    
+////                    if let weatherObject = try? Weather(weatherDictionary: dataPoint as [String : AnyObject]) {
+////                        //forecastArray.append(weatherObject)
+////                        //print(forecastArray)
+////                    }
+//                }
+//            }
+//            return Weather(weatherDictionary: currentWeatherDictionary)
+//            
+//        }
+//        else {
+//            print("JSON dictionary returned nil for 'currently' key")
+//            return nil
+//        }
+//    }
+//    
 }
 
-struct Coordinate {
-    let latitude: Double
-    let longitude: Double
-    var description: String {
-        return "\(latitude),\(longitude)"
-    }
-}
+//struct Coordinate {
+//    let latitude: Double
+//    let longitude: Double
+//    var description: String {
+//        return "\(latitude),\(longitude)"
+//    }
+//}

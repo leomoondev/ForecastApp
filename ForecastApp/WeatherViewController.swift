@@ -68,10 +68,10 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, GMSAut
     // MARK: - GoogleAutoComplete Delegate
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         cityNameLabel.text = place.name
-        fetchWeather(latitue: place.coordinate.latitude, longtitude: place.coordinate.longitude)
+        fetchWeather(latitude: place.coordinate.latitude, longtitude: place.coordinate.longitude)
        
-        appTitleLabel.isHidden = true
-        informationLabel.isHidden = true
+        //appTitleLabel.isHidden = true
+        //informationLabel.isHidden = true
         
         tempTitleLabel.isHidden = false
         summaryTitleLabel.isHidden = false
@@ -90,7 +90,8 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, GMSAut
     func wasCancelled(_ viewController: GMSAutocompleteViewController) {
         self.dismiss(animated: true, completion: nil)
     }
-    
+
+
     // MARK: - Helper Method
     //func displayWeather(using viewModel: Weather) {
         //avgTempLabel.text = viewModel.temperature
@@ -100,7 +101,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, GMSAut
         //weatherImageIcon.image = viewModel.icon
     //}
 
-    func fetchWeather(latitue: Double, longtitude: Double ) {
+    func fetchWeather(latitude: Double, longtitude: Double ) {
         
 //        networkManager.getCurrentWeather(at: Coordinate(latitude: latitue, longitude: longtitude)) { [unowned self] currentWeather in
 //            if let currentWeather = currentWeather {
@@ -109,28 +110,35 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, GMSAut
 //            }
 //        }
         
-        let networkManager = NetworkManager()
-        networkManager.getCurrentWeather(at: Coordinate(latitude: latitue, longitude: longtitude)) {
-            (currentWeather) in
-            if let currentWeather = currentWeather {
-                DispatchQueue.main.async {
-                    if let temperature = currentWeather.temperature {
-                        self.avgTempLabel?.text = "\(temperature)º"
-                    }
-                    if let humidity = currentWeather.humidity {
-                        self.windSpeedLabel?.text = "\(humidity)%"
-                    }
-                    if let precipitation = currentWeather.precipProbability {
-                        self.precipationLabel?.text = "\(precipitation)%"
-                    }
-                    if let icon = currentWeather.icon {
-                        self.weatherImageIcon?.image = icon
-                    }
-                    if let summary = currentWeather.summary {
-                        self.summaryLabel?.text = summary
-                    }
-                    
-                }
+//        let networkManager = NetworkManager()
+//        networkManager.getCurrentWeather(at: Coordinate(latitude: latitue, longitude: longtitude)) {
+//            (currentWeather) in
+//            if let currentWeather = currentWeather {
+//                DispatchQueue.main.async {
+//                    if let temperature = currentWeather.temperature {
+//                        self.avgTempLabel?.text = "\(temperature)º"
+//                    }
+////                    if let humidity = currentWeather.humidity {
+////                        self.windSpeedLabel?.text = "\(humidity)%"
+////                    }
+////                    if let precipitation = currentWeather.precipProbability {
+////                        self.precipationLabel?.text = "\(precipitation)%"
+////                    }
+//                    if let icon = currentWeather.icon {
+//                        self.weatherImageIcon?.image = icon
+//                    }
+//                    if let summary = currentWeather.summary {
+//                        self.summaryLabel?.text = summary
+//                    }
+//                    
+//                }
+//            }
+//        }
+        
+        Weather.forecast(withLocation: "\(latitude),\(longtitude)") { (results:[Weather]) in
+            for result in results {
+                
+                print("\(result)\n\n")
             }
         }
     }
