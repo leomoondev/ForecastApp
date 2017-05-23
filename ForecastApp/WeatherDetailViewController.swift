@@ -46,24 +46,21 @@ class WeatherDetailViewController: UIViewController, UITableViewDelegate, UITabl
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherDetailCell", for: indexPath) as! WeatherDetailTableViewCell
 
-        print(numberOfCityObject)
-
-
         let composition = numberOfCityObject[indexPath.row]
 
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEE"
         
-        cell.dayTimeLabel.text = dateFormatter.string(from: (NSDate(timeIntervalSince1970: composition.time)) as Date)
-        
-        cell.temperatureMaxLabel.text = "\(round(convertToCelsius(fahrenheit: composition.temperatureMax) * 4.0)/4.0)º"
-        cell.temperatureMinLabel.text = "\(round(convertToCelsius(fahrenheit: composition.temperatureMin) * 4.0)/4.0)º"
-        cell.windSpeedLabel.text = "\(composition.windSpeed)mph"
-        cell.precipitationLabel.text = "\(composition.precipitationProb*100)%"
-        cell.weatherIconImageView.image = composition.icon
-        
+        DispatchQueue.main.async {
 
-        
+            cell.dayTimeLabel.text = dateFormatter.string(from: (NSDate(timeIntervalSince1970: composition.time)) as Date)
+            cell.temperatureMaxLabel.text = "\(round(self.convertToCelsius(fahrenheit: composition.temperatureMax) * 4.0)/4.0)º"
+            cell.temperatureMinLabel.text = "\(round(self.convertToCelsius(fahrenheit: composition.temperatureMin) * 4.0)/4.0)º"
+            cell.windSpeedLabel.text = "\(composition.windSpeed)mph"
+            cell.precipitationLabel.text = "\(composition.precipitationProb*100)%"
+            cell.weatherIconImageView.image = composition.icon
+        }
+
         return cell
     }
     

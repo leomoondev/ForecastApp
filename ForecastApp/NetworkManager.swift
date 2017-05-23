@@ -10,13 +10,15 @@ import Foundation
 
 class NetworkManager {
 
+    static let darkSkyAPIKey = "5079a2674db9b6ef9345eb089da4cbbd"
+    static let darkSkyURL = "https://api.darksky.net/forecast/\(darkSkyAPIKey)/"
+
     typealias WeatherCompletionHandler = (Weather?) -> Void
 
-    static let basePath = "https://api.darksky.net/forecast/5079a2674db9b6ef9345eb089da4cbbd/"
     
-    static func getWeatherInformation(withLocation location:String, completion: @escaping ([Weather]) -> ()) {
+    static func getWeatherInformation(withLocation coordinate:String, completion: @escaping ([Weather]) -> ()) {
         
-        let url = basePath + location
+        let url = darkSkyURL + coordinate
         
         let request = URLRequest(url: URL(string: url)!)
         
