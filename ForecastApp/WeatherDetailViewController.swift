@@ -11,10 +11,10 @@ import GooglePlaces
 
 class WeatherDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    // MARK: = IBOutlet
+    // MARK: - IBOutlet
     @IBOutlet weak var detailTableView: UITableView!
     
-    // MARK: = Variable
+    // MARK: - Variable
     var numberOfPlacesArray = [Weather]()
     
     override func viewDidLoad() {
@@ -60,6 +60,9 @@ class WeatherDetailViewController: UIViewController, UITableViewDelegate, UITabl
         cell.temperatureMinLabel.text = "\(round(convertToCelsius(fahrenheit: composition.temperatureMin) * 4.0)/4.0)º"
         cell.windSpeedLabel.text = "\(composition.windSpeed)mph"
         cell.precipitationLabel.text = "\(composition.precipitationProb*100)%"
+        cell.weatherIconImageView.image = composition.icon
+        
+
         
         return cell
     }
