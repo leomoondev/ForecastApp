@@ -183,7 +183,19 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zMO-Y4-kDT" id="k1F-ad-D9o">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="652-11-ohB">
+                                                    <rect key="frame" x="8" y="11" width="304" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="cityNameTextLabel" destination="652-11-ohB" id="h9u-Yd-ybb"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
@@ -200,7 +212,13 @@
                             <constraint firstItem="R1R-fP-kcx" firstAttribute="top" secondItem="fyI-dl-bTU" secondAttribute="top" id="jgr-ZV-zWz"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="XPz-P8-lOa"/>
+                    <navigationItem key="navigationItem" id="XPz-P8-lOa">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="osb-VG-mOc">
+                            <connections>
+                                <action selector="addButtonTapped:" destination="uBz-Uo-bwg" id="jJ7-pe-DqH"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="favoritesTableView" destination="R1R-fP-kcx" id="ssZ-xx-fGq"/>
                     </connections>

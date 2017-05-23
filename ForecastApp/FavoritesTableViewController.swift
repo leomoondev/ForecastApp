@@ -7,10 +7,18 @@
 //
 
 import UIKit
+import GooglePlaces
 
-class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+//var favoritesCityNameArray = [String]()
 
+class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GMSAutocompleteViewControllerDelegate {
+
+    //let networkManager = NetworkManager()
+    var searchResults: [String]!
+    var favoritesCityNameArray = [String]()
     @IBOutlet weak var favoritesTableView: UITableView!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -19,6 +27,8 @@ class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITab
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+//        favoritesTableView.dataSource = self
+//        favoritesTableView.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -28,18 +38,63 @@ class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITab
 
     // MARK: - Table view data source
 
+    // MARK: - Table view data source
+    func numberOfSections(in tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return 1
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("numberOfRowsInSection")
+        // #warning Incomplete implementation, return the number of rows
+
         return 1
     }
     
+//    func numberOfSections(in tableView: UITableView) -> Int {
+//        
+//        return 1
+//    }
+    
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        
+//        return self.searchResults.count
+//    }
+//    
+    
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "cellIdentifier", for: indexPath)
+//        
+//        cell.textLabel?.text = self.searchResults[indexPath.row]
+//        return cell
+//    }
+//
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        print("numberOfRowsInSection")
+//        return 1
+//    }
+//    
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! FavoritesTableViewCell
+//        
+//        
+//        ///cell.cityNameTextLabel?.text = favoritesCityArray[indexPath.row]
+//        
+////        let favoriteCityName = favoritesCityNameArray[indexPath.row]
+////        cell.textLabel?.text =
+////        
+////        cityNameTextLabel?.text =
+//        print("cellForRowAtIndexPath")
+//        return cell
+//    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! FavoritesTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
-        print("cellForRowAtIndexPath")
+        let weatherObject = searchResults[indexPath.section]
+        
+        cell.textLabel?.text = weatherObject
+        
         return cell
     }
-    
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
@@ -100,5 +155,63 @@ class FavoritesTableViewController: UIViewController, UITableViewDelegate, UITab
         // Pass the selected object to the new view controller.
     }
     */
+    
+    // MARK: - GoogleAutoComplete Delegate
+    func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
+        searchResults.append(place.name)
+        favoritesCityArray.append(place.name)
+        //cityNameLabel.text = place.name
+        fetchWeather(latitue: place.coordinate.latitude, longtitude: place.coordinate.longitude)
+        
+        //appTitleLabel.isHidden = true
+        //informationLabel.isHidden = true
+        
+        //tempTitleLabel.isHidden = false
+        //summaryTitleLabel.isHidden = false
+        //windTitleLabel.isHidden = false
+        //precipitationTitleLabel.isHidden = false
+        
+        //addToFavoritesButton.isHidden = false
+        //removeFromFavoritesButton.isHidden = false
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
+        print("Error: Found error on Auto Complete \(error)")
+    }
+    
+    func wasCancelled(_ viewController: GMSAutocompleteViewController) {
+        self.dismiss(animated: true, completion: nil)
+    }
+
+    
+    // MARK: - Helper Method
+    func displayWeather(using viewModel: Weather) {
+        
+        //avgTempLabel.text = viewModel.temperature
+        //summaryLabel.text = viewModel.summary
+        //precipationLabel.text = viewModel.precipitationProbability
+        //windSpeedLabel.text = viewModel.windSpeed
+        //weatherImageIcon.image = viewModel.icon
+    }
+    
+    func fetchWeather(latitue: Double, longtitude: Double ) {
+        
+//        networkManager.getCurrentWeather(at: Coordinate(latitude: latitue, longitude: longtitude)) { [unowned self] currentWeather in
+//            if let currentWeather = currentWeather {
+//                let viewModel = Weather(model: currentWeather)
+//                self.displayWeather(using: Weather)
+//            }
+//        }
+    }
+    
+    @IBAction func addButtonTapped(_ sender: Any) {
+        
+        let autoCompleteController = GMSAutocompleteViewController()
+        autoCompleteController.delegate = self
+        
+        //self.locationManager.startUpdatingLocation()
+        self.present(autoCompleteController, animated: true, completion: nil)
+    }
 
 }

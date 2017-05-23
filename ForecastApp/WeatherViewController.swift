@@ -6,8 +6,12 @@
 //  Copyright © 2017 leomoon. All rights reserved.
 //
 
+import Foundation
 import UIKit
 import GooglePlaces
+
+var favoritesCityArray = [String]()
+//var favoritesCityObjectArray = [WeatherViewModel]()
 
 class WeatherViewController: UIViewController, CLLocationManagerDelegate, GMSAutocompleteViewControllerDelegate {
 
@@ -34,7 +38,8 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, GMSAut
     // MARK: - Variables
     var locationManager = CLLocationManager()
     
-    let networkManager = NetworkManager()
+    fileprivate let apiKey = "5079a2674db9b6ef9345eb089da4cbbd"
+    //let networkManager = NetworkManager()
 
     
     override func viewDidLoad() {
@@ -64,7 +69,7 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, GMSAut
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         cityNameLabel.text = place.name
         fetchWeather(latitue: place.coordinate.latitude, longtitude: place.coordinate.longitude)
-        
+       
         appTitleLabel.isHidden = true
         informationLabel.isHidden = true
         
@@ -87,20 +92,45 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, GMSAut
     }
     
     // MARK: - Helper Method
-    func displayWeather(using viewModel: WeatherViewModel) {
-        avgTempLabel.text = viewModel.temperature
-        summaryLabel.text = viewModel.summary
-        precipationLabel.text = viewModel.precipitationProbability
-        windSpeedLabel.text = viewModel.windSpeed
-        weatherImageIcon.image = viewModel.icon
-    }
-    
+    //func displayWeather(using viewModel: Weather) {
+        //avgTempLabel.text = viewModel.temperature
+        //summaryLabel.text = viewModel.summary
+        //precipationLabel.text = viewModel.precipitationProbability
+        //windSpeedLabel.text = viewModel.windSpeed
+        //weatherImageIcon.image = viewModel.icon
+    //}
+
     func fetchWeather(latitue: Double, longtitude: Double ) {
         
-        networkManager.getCurrentWeather(at: Coordinate(latitude: latitue, longitude: longtitude)) { [unowned self] currentWeather in
+//        networkManager.getCurrentWeather(at: Coordinate(latitude: latitue, longitude: longtitude)) { [unowned self] currentWeather in
+//            if let currentWeather = currentWeather {
+//                let viewModel = Weather(model: currentWeather)
+//                self.displayWeather(using: viewModel)
+//            }
+//        }
+        
+        let networkManager = NetworkManager(apiKey: apiKey)
+        networkManager.getCurrentWeather(at: Coordinate(latitude: latitue, longitude: longtitude)) {
+            (currentWeather) in
             if let currentWeather = currentWeather {
-                let viewModel = WeatherViewModel(model: currentWeather)
-                self.displayWeather(using: viewModel)
+                DispatchQueue.main.async {
+                    if let temperature = currentWeather.temperature {
+                        self.avgTempLabel?.text = "\(temperature)º"
+                    }
+                    if let humidity = currentWeather.humidity {
+                        self.windSpeedLabel?.text = "\(humidity)%"
+                    }
+                    if let precipitation = currentWeather.precipProbability {
+                        self.precipationLabel?.text = "\(precipitation)%"
+                    }
+                    if let icon = currentWeather.icon {
+                        self.weatherImageIcon?.image = icon
+                    }
+                    if let summary = currentWeather.summary {
+                        self.summaryLabel?.text = summary
+                    }
+                    
+                }
             }
         }
     }
@@ -116,6 +146,19 @@ class WeatherViewController: UIViewController, CLLocationManagerDelegate, GMSAut
     
     @IBAction func addToFavoritesButtonTapped(_ sender: Any) {
         
+        favoritesCityArray.append(self.cityNameLabel.text!)
+
+        
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(favoritesCityArray, forKey: "FavoritesCityArray")
+        userDefaults.synchronize()
+        
+
+        for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
+            print("\(key) = \(value) \n")
+        }
+
+
     }
     
     @IBAction func removeFromFavoritesButtonTapped(_ sender: Any) {
